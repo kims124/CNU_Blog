@@ -14,7 +14,7 @@ const NoPostList = () => {
   return (
     <Wrapper>
       <img src={NOTHING_HERE_IMG} alt="nothing" style={{ width: '30rem' }} />
-      <h1>아직 작성된 포스트가 없어요</h1>
+      <h1>아직 작성된 포스트가 없어요!</h1>
     </Wrapper>
   );
 };

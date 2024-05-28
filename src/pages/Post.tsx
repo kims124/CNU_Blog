@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { deletePostById, getPostById } from '../api';
-import { IPost } from '../api/types';
-import NotFound from '../components/NotFound';
-import Tag from '../components/Tag';
+import NotFound from '../../../../cse 3-1/실전코딩/CNU_Blog/src/components/NotFound.tsx';
+import Tag from '../../../../cse 3-1/실전코딩/CNU_Blog/src/components/Tag.tsx';
+import useGetPostById from '../../../../cse 3-1/실전코딩/CNU_Blog/src/queries/useGetPostById.ts';
+import useDeletePostById from '../../../../cse 3-1/실전코딩/CNU_Blog/src/queries/useDeletePostById.ts';
 
 const Title = styled.h1`
   font-size: 3rem;
@@ -60,8 +59,53 @@ const Text = styled.p`
 `;
 
 const Post = () => {
+  const params = useParams();
+  const { postId = '' } = params;
+  const { data: post, isError, isLoading } = useGetPostById(postId);
+  const { mutate: deletePost } = useDeletePostById();
+  const clickDeleteButton = () => {
+    const result = window.confirm('정말 삭제하십니까?');
+    if (result) {
+      deletePost({ postId });
+    }
+  };
+  if (isLoading) {
+    return <div>...불어오는중...</div>;
+  }
+  if (!post || isError) {
+    return <NotFound />;
+  }
+
   // todo (4) post 컴포넌트 작성
-  return <div style={{ margin: '5.5rem auto', width: '700px' }}></div>;
+  return (
+    <div style={{ margin: '5.5rem auto', width: '700px' }}>
+      <div>
+        <Title>{post.title}</Title>
+        <Toolbar>
+          <Info>
+            <div>n분전</div>
+          </Info>
+          <div>
+            {/*todo 수정/삭제 버튼 작성*/}
+            <Link to="/write" state={{ postId }}>
+              <TextButton style={{ marginRight: 10 }}>수정</TextButton>
+            </Link>
+            <TextButton onClick={clickDeleteButton}>삭제</TextButton>
+          </div>
+        </Toolbar>
+        {post?.tag && (
+          <TagWrapper>
+            <Tag>#{post.tag}</Tag>
+          </TagWrapper>
+        )}
+      </div>
+      <ContentsArea>
+        {post.contents.split('\n').map((text: string, index: number) => (
+          <Text key={index}>{text}</Text>
+        ))}
+      </ContentsArea>
+    </div>
+  );
 };
 
 export default Post;

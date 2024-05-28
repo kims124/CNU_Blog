@@ -31,7 +31,7 @@ const NotFound = () => {
   return (
     <Wrapper>
       <img src={NOT_FOUND_IMG} alt="404 error" style={{ width: '30rem' }} />
-      <h1>웁스! 여긴 아무것도 없네요!</h1>
+      <h1>이런! 아직 여긴 깨끗해요!</h1>
       <Link to="/">
         <HomeButton>홈으로 가기</HomeButton>
       </Link>
