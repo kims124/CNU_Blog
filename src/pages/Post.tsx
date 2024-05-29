@@ -1,19 +1,19 @@
 import { useParams, Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import NotFound from '../../../../cse 3-1/실전코딩/CNU_Blog/src/components/NotFound.tsx';
-import Tag from '../../../../cse 3-1/실전코딩/CNU_Blog/src/components/Tag.tsx';
-import useGetPostById from '../../../../cse 3-1/실전코딩/CNU_Blog/src/queries/useGetPostById.ts';
-import useDeletePostById from '../../../../cse 3-1/실전코딩/CNU_Blog/src/queries/useDeletePostById.ts';
+import NotFound from '../components/NotFound';
+import Tag from '../components/Tag';
+import useGetPostById from '../queries/useGetPostById.ts';
+import useDeletePostById from '../queries/useDeletePostById.ts';
 
 const Title = styled.h1`
-  font-size: 3rem;
-  line-height: 1.5;
-  letter-spacing: -0.004em;
-  margin-top: 0px;
-  font-weight: 800;
-  color: #212529;
-  margin-bottom: 2rem;
-  word-break: keep-all;
+    font-size: 3rem;
+    line-height: 1.5;
+    letter-spacing: -0.004em;
+    margin-top: 0px;
+    font-weight: 800;
+    color: #212529;
+    margin-bottom: 2rem;
+    word-break: keep-all;
 `;
 
 const Toolbar = styled.div`
@@ -63,32 +63,33 @@ const Post = () => {
   const { postId = '' } = params;
   const { data: post, isError, isLoading } = useGetPostById(postId);
   const { mutate: deletePost } = useDeletePostById();
+
   const clickDeleteButton = () => {
-    const result = window.confirm('정말 삭제하십니까?');
+    const result = window.confirm('정말로 게시글을 삭제하시겠습니까?');
     if (result) {
       deletePost({ postId });
     }
   };
+
   if (isLoading) {
-    return <div>...불어오는중...</div>;
+    return <div>...불러오는 중...</div>;
   }
+
   if (!post || isError) {
     return <NotFound />;
   }
 
-  // todo (4) post 컴포넌트 작성
   return (
     <div style={{ margin: '5.5rem auto', width: '700px' }}>
       <div>
-        <Title>{post.title}</Title>
+        <Title>{post?.title}</Title>
         <Toolbar>
           <Info>
             <div>n분전</div>
           </Info>
           <div>
-            {/*todo 수정/삭제 버튼 작성*/}
-            <Link to="/write" state={{ postId }}>
-              <TextButton style={{ marginRight: 10 }}>수정</TextButton>
+            <Link to="/write" state={{ postId }} style={{ marginRight: 10 }}>
+              <TextButton>수정</TextButton>
             </Link>
             <TextButton onClick={clickDeleteButton}>삭제</TextButton>
           </div>
@@ -100,7 +101,7 @@ const Post = () => {
         )}
       </div>
       <ContentsArea>
-        {post.contents.split('\n').map((text: string, index: number) => (
+        {post?.contents?.split('\n').map((text, index) => (
           <Text key={index}>{text}</Text>
         ))}
       </ContentsArea>
